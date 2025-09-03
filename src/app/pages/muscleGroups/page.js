@@ -11,13 +11,12 @@ function MuscleGroupNav() {
     getMuscleGroups().then(setMuscleGroups);
   }, []);
 
-  console.log('muscleGroups:', muscleGroups);
   return (
     <>
       <h3>This is the Specific Muscle Groups Main Page! Here, users can navigate to any muscle group to see all of their workouts within that group.</h3>
 
       {muscleGroups.map((mGroup) => (
-        <MuscleGroupButton muscleGroupObj={mGroup.muscle_group} />
+        <MuscleGroupButton muscleGroupObj={mGroup} />
       ))}
     </>
   );
