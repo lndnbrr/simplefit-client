@@ -8,3 +8,8 @@ body {
   color: rgb(239, 222, 222);
   padding: 140px;
 }
+
+.woborder {
+  border: 2px black solid;
+  padding: 3px;
+}
