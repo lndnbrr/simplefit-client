@@ -5,27 +5,39 @@
 import { Button } from 'react-bootstrap';
 import { signOut } from '@/utils/auth'; // anything in the src dir, you can use the @ instead of relative paths
 import { useAuth } from '@/utils/context/authContext';
+import { useRouter } from 'next/navigation';
 
 function Home() {
   const { user } = useAuth();
+  const router = useRouter();
 
   return (
-    <div
-      className="text-center d-flex flex-column justify-content-center align-content-center"
-      style={{
-        height: '90vh',
-        padding: '30px',
-        maxWidth: '400px',
-        margin: '0 auto',
-      }}
-    >
-      <h1>Hello {user.displayName}!</h1>
-      <h3>This is the Home Page!</h3>
-      <p>Click the button below to logout!</p>
-      <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
-        Sign Out
-      </Button>
-    </div>
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          router.push('/pages/workout/new');
+        }}
+      >
+        Create a Workout
+      </button>
+      <div
+        className="text-center d-flex flex-column justify-content-center align-content-center"
+        style={{
+          height: '90vh',
+          padding: '30px',
+          maxWidth: '400px',
+          margin: '0 auto',
+        }}
+      >
+        <h1>Hello {user.displayName}!</h1>
+        <h3>This is the Home Page!</h3>
+        <p>Click the button below to logout!</p>
+        <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
+          Sign Out
+        </Button>
+      </div>
+    </>
   );
 }
 
