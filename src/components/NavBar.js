@@ -21,6 +21,9 @@ export default function NavBar() {
             <Link className="nav-link" href="/pages/muscleGroups">
               Muscle Group
             </Link>
+            <Link className="nav-link" href="/pages/profile">
+              Profile
+            </Link>
           </Nav>
 
           <Button variant="danger" onClick={signOut}>
