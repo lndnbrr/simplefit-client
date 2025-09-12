@@ -5,35 +5,41 @@ function WorkoutLog({ workoutObj }) {
 
   return (
     <div className="d-flex flex-row justify-content-center">
-        <div className="woborder">
-          <div>Timestamp</div>
-          <div>{workoutObj.time_stamp}</div>
-        </div>
-        <div className="woborder">
-          <div>Name of workout</div>
-          <div>{workoutObj.name}</div>
-        </div>
-        <div className="woborder">
-          <div>Number of sets</div>
-          <div>{workoutObj.num_of_sets}</div>
-        </div>
-        <div className="woborder">
-          <div>Total amount of reps</div>
-          <div>{workoutObj.total_reps}</div>
-        </div>
-        <div className="woborder">
-          <div>Max weight of a set</div>
-          <div>{workoutObj.max_weight}</div>
-        </div>
-        <div className="woborder">
-          <div>Associated muscle group</div>
-          <div>{workoutObj.muscle_group_id.muscle_group}</div>
-        </div>
-        <div className="woborder">
-          <div>Did you complete the workout?</div>
-          {workoutObj.is_complete ? <div>Yes</div> : <div>No</div>}
-        </div>
+      <div className="woborder">
+        <div>Timestamp</div>
+        <div>{workoutObj.time_stamp}</div>
       </div>
+      <div className="woborder">
+        <div>Name of workout</div>
+        <div>{workoutObj.name}</div>
+      </div>
+      <div className="woborder">
+        <div>Number of sets</div>
+        <div>{workoutObj.num_of_sets}</div>
+      </div>
+      <div className="woborder">
+        <div>Total amount of reps</div>
+        <div>{workoutObj.total_reps}</div>
+      </div>
+      <div className="woborder">
+        <div>Max weight of a set</div>
+        <div>{workoutObj.max_weight}</div>
+      </div>
+      <div className="woborder">
+        <div>Associated muscle group</div>
+        <div>{workoutObj.muscle_group_id.muscle_group}</div>
+      </div>
+      <div className="woborder">
+        <div>Descriptions</div>
+        {workoutObj.descriptions.map((description) => (
+          <div key={description.id}>{description.description}</div>
+        ))}
+      </div>
+      <div className="woborder">
+        <div>Did you complete the workout?</div>
+        {workoutObj.is_complete ? <div>Yes</div> : <div>No</div>}
+      </div>
+    </div>
   );
 }
 
@@ -52,5 +58,11 @@ WorkoutLog.propTypes = {
       id: PropTypes.number,
       muscle_group: PropTypes.string,
     }),
+    descriptions: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        description: PropTypes.string,
+      }),
+    ),
   }).isRequired,
 };

@@ -15,8 +15,6 @@ function WorkoutsByMG({ params }) {
     getMgWorkouts(user.uid, id).then(setWorkouts);
   }, [user.uid, id]);
 
-  console.log('current state of workouts', workouts);
-
   return (
     <>
       <h3>This is the page where we see all Workouts by Muscle Group!</h3>
