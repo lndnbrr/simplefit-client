@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import getMuscleGroups from '@/api/muscleGroupAPI';
+import { getDescriptionsByUid } from '@/api/descriptionAPI';
 import { createWorkout } from '@/api/workoutAPI';
 import { useAuth } from '@/utils/context/authContext';
 import { useRouter } from 'next/navigation';
@@ -14,18 +15,24 @@ const initialState = {
   total_reps: 0,
   max_weight: 0,
   muscle_group_id: 0,
+  descriptions: [],
   is_complete: false,
 };
 
 function WorkoutForm() {
   const [formInput, setFormInput] = useState(initialState);
   const [mgInput, setMgInput] = useState([]);
+  const [dInput, setDInput] = useState([]);
   const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     getMuscleGroups().then(setMgInput);
   }, []);
+
+  useEffect(() => {
+    getDescriptionsByUid(user.uid).then(setDInput);
+  }, [user.uid]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +41,20 @@ function WorkoutForm() {
       parsedVal = Number(value);
     }
     setFormInput((prevState) => ({ ...prevState, [name]: parsedVal }));
+  };
+
+  const handleDescriptions = (e) => {
+    const { value } = e.target;
+    const formDescriptions = [...formInput.descriptions];
+    const i = formDescriptions.indexOf(Number(value));
+
+    if (i !== -1) {
+      formDescriptions.splice(i, 1);
+      setFormInput((prev) => ({ ...prev, descriptions: formDescriptions }));
+    } else {
+      formDescriptions.push(Number(value));
+      setFormInput((prev) => ({ ...prev, descriptions: formDescriptions }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -76,9 +97,14 @@ function WorkoutForm() {
         </Form.Select>
       </Form.Group>
 
-      {/* <Form.Group className="mb-3" controlId="description">
-        <Form.Check type="checkbox" label="This is going to be for description" />
-      </Form.Group> */}
+      <Form.Group className="mb-3" controlId="descriptions">
+        <Form.Label>Description Selection</Form.Label>
+        <div>
+          {dInput.map((d) => (
+            <Form.Check key={d.id} inline label={d.description} value={d.id} type="checkbox" checked={formInput.descriptions.includes(d.id)} onChange={handleDescriptions} />
+          ))}
+        </div>
+      </Form.Group>
 
       <Form.Group className="mb-3" controlId="is_complete">
         <Form.Check

@@ -1,1 +1,28 @@
 // All API calls for Description data will reside here
+const getAllDescriptions = () =>
+  new Promise((resolve, reject) => {
+    fetch('http://localhost:8000/descriptions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
+const getDescriptionsByUid = (uid) =>
+  new Promise((resolve, reject) => {
+    fetch(`http://localhost:8000/descriptions?uid=${uid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
+export { getAllDescriptions, getDescriptionsByUid };
