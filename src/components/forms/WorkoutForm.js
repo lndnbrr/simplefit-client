@@ -5,9 +5,10 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import getMuscleGroups from '@/api/muscleGroupAPI';
 import { getDescriptionsByUid } from '@/api/descriptionAPI';
-import { createWorkout } from '@/api/workoutAPI';
+import { createWorkout, updateWorkout } from '@/api/workoutAPI';
 import { useAuth } from '@/utils/context/authContext';
 import { useRouter } from 'next/navigation';
+import PropTypes from 'prop-types';
 
 const initialState = {
   name: '',
@@ -19,12 +20,40 @@ const initialState = {
   is_complete: false,
 };
 
-function WorkoutForm() {
-  const [formInput, setFormInput] = useState(initialState);
+function WorkoutForm({ workoutObj = initialState }) {
+  const [formInput, setFormInput] = useState({
+    ...workoutObj,
+    descriptions: workoutObj.descriptions || [],
+  });
   const [mgInput, setMgInput] = useState([]);
   const [dInput, setDInput] = useState([]);
   const { user } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (workoutObj.id) {
+      let descriptions = [];
+      if (workoutObj.descriptions) {
+        descriptions = workoutObj.descriptions.map((des) => {
+          if (typeof des === 'object' && des.id) {
+            return des.id;
+          }
+          return Number(des);
+        });
+      }
+
+      let muscleGroupId = workoutObj.muscle_group_id;
+      if (typeof muscleGroupId === 'object' && muscleGroupId.id) {
+        muscleGroupId = muscleGroupId.id;
+      }
+
+      setFormInput({
+        ...workoutObj,
+        descriptions,
+        muscle_group_id: muscleGroupId,
+      });
+    }
+  }, [workoutObj]);
 
   useEffect(() => {
     getMuscleGroups().then(setMgInput);
@@ -45,7 +74,7 @@ function WorkoutForm() {
 
   const handleDescriptions = (e) => {
     const { value } = e.target;
-    const formDescriptions = [...formInput.descriptions];
+    const formDescriptions = [...(formInput.descriptions || [])];
     const i = formDescriptions.indexOf(Number(value));
 
     if (i !== -1) {
@@ -59,10 +88,16 @@ function WorkoutForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = { ...formInput, uid: user.uid };
-    createWorkout(payload).then(() => {
-      router.push('/pages/workout');
-    });
+    console.log('Submitting formInput:', formInput);
+
+    if (workoutObj.id) {
+      updateWorkout(formInput).then(() => router.push(`/pages/workout`));
+    } else {
+      const payload = { ...formInput, uid: user.uid };
+      createWorkout(payload).then(() => {
+        router.push('/pages/workout');
+      });
+    }
   };
 
   return (
@@ -89,10 +124,12 @@ function WorkoutForm() {
 
       <Form.Group className="mb-3" controlId="muscle_group_id">
         <Form.Label>Muscle Group Selection</Form.Label>
-        <Form.Select aria-label="select a muscle group" name="muscle_group_id" onChange={handleChange}>
+        <Form.Select aria-label="select a muscle group" name="muscle_group_id" value={formInput.muscle_group_id || ''} onChange={handleChange}>
           <option value="">select a muscle group</option>
           {mgInput.map((mg) => (
-            <option value={mg.id}>{mg.muscle_group}</option>
+            <option key={mg.id} value={mg.id}>
+              {mg.muscle_group}
+            </option>
           ))}
         </Form.Select>
       </Form.Group>
@@ -100,9 +137,11 @@ function WorkoutForm() {
       <Form.Group className="mb-3" controlId="descriptions">
         <Form.Label>Description Selection</Form.Label>
         <div>
-          {dInput.map((d) => (
-            <Form.Check key={d.id} inline label={d.description} value={d.id} type="checkbox" checked={formInput.descriptions.includes(d.id)} onChange={handleDescriptions} />
-          ))}
+          {dInput.map((d) => {
+            const isChecked = (formInput.descriptions || []).includes(d.id);
+
+            return <Form.Check key={d.id} inline label={d.description} value={d.id} type="checkbox" checked={isChecked} onChange={handleDescriptions} />;
+          })}
         </div>
       </Form.Group>
 
@@ -128,3 +167,24 @@ function WorkoutForm() {
 }
 
 export default WorkoutForm;
+
+WorkoutForm.propTypes = {
+  workoutObj: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    num_of_sets: PropTypes.number,
+    total_reps: PropTypes.number,
+    max_weight: PropTypes.number,
+    time_stamp: PropTypes.string,
+    is_complete: PropTypes.bool,
+    muscle_group_id: PropTypes.shape({
+      id: PropTypes.number,
+      muscle_group: PropTypes.string,
+    }),
+    descriptions: PropTypes.arrayOf(PropTypes.number),
+  }),
+};
+
+WorkoutForm.defaultProps = {
+  workoutObj: initialState,
+};

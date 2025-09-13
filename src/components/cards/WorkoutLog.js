@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
 function WorkoutLog({ workoutObj }) {
   // This is a reusable card component that will be used to display workouts that a user performed!
@@ -38,6 +40,11 @@ function WorkoutLog({ workoutObj }) {
       <div className="woborder">
         <div>Did you complete the workout?</div>
         {workoutObj.is_complete ? <div>Yes</div> : <div>No</div>}
+      </div>
+      <div className="woborder">
+        <Link href={`workout/update/${workoutObj.id}`} passHref>
+          <Button variant="warning">Edit</Button>
+        </Link>
       </div>
     </div>
   );
