@@ -49,7 +49,7 @@ function WorkoutLog({ workoutObj, onUpdate }) {
         {workoutObj.is_complete ? <div>Yes</div> : <div>No</div>}
       </div>
       <div className="woborder">
-        <Link href={`workout/update/${workoutObj.id}`} passHref>
+        <Link href={`/pages/workout/update/${workoutObj.id}`} passHref>
           <Button variant="warning">Edit</Button>
         </Link>
         <Button onClick={deleteThisWorkout} variant="danger">
