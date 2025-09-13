@@ -67,4 +67,16 @@ const getSingleWorkout = (id) =>
       .catch(reject);
   });
 
-export { getUidWorkouts, getMgWorkouts, createWorkout, updateWorkout, getSingleWorkout };
+const deleteWorkout = (id) =>
+  new Promise((resolve, reject) => {
+    fetch(`http://localhost:8000/workouts/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
+export { getUidWorkouts, getMgWorkouts, createWorkout, updateWorkout, getSingleWorkout, deleteWorkout };

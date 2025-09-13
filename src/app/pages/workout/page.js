@@ -14,10 +14,14 @@ function WorkoutHistory() {
     getUidWorkouts(user.uid).then(setWorkouts);
   }, [user.uid]);
 
+  const resetWorkouts = () => {
+    getUidWorkouts(user.uid).then(setWorkouts);
+  };
+
   return (
     <>
       {workouts.map((wo) => (
-        <WorkoutLog key={wo.id} workoutObj={wo} />
+        <WorkoutLog key={wo.id} workoutObj={wo} onUpdate={resetWorkouts} />
       ))}
     </>
   );
