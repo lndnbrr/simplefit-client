@@ -25,4 +25,18 @@ const getDescriptionsByUid = (uid) =>
       .catch(reject);
   });
 
-export { getAllDescriptions, getDescriptionsByUid };
+const createDescription = (payload) =>
+  new Promise((resolve, reject) => {
+    fetch('http://localhost:8000/descriptions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
+export { getAllDescriptions, getDescriptionsByUid, createDescription };

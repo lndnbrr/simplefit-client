@@ -19,6 +19,14 @@ function ProfilePage() {
       >
         all workouts
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          router.push(`/pages/description`);
+        }}
+      >
+        description management
+      </button>
     </>
   );
 }
