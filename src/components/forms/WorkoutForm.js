@@ -88,7 +88,6 @@ function WorkoutForm({ workoutObj = initialState }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting formInput:', formInput);
 
     if (workoutObj.id) {
       updateWorkout(formInput).then(() => router.push(`/pages/workout`));
