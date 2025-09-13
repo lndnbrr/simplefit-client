@@ -1,9 +1,16 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
+import { deleteWorkout } from '../../api/workoutAPI';
 
-function WorkoutLog({ workoutObj }) {
+function WorkoutLog({ workoutObj, onUpdate }) {
   // This is a reusable card component that will be used to display workouts that a user performed!
+
+  const deleteThisWorkout = () => {
+    if (window.confirm(`Delete ${workoutObj.name}?`)) {
+      deleteWorkout(workoutObj.id).then(() => onUpdate());
+    }
+  };
 
   return (
     <div className="d-flex flex-row justify-content-center">
@@ -45,6 +52,9 @@ function WorkoutLog({ workoutObj }) {
         <Link href={`workout/update/${workoutObj.id}`} passHref>
           <Button variant="warning">Edit</Button>
         </Link>
+        <Button onClick={deleteThisWorkout} variant="danger">
+          Delete
+        </Button>
       </div>
     </div>
   );
@@ -72,4 +82,5 @@ WorkoutLog.propTypes = {
       }),
     ),
   }).isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };

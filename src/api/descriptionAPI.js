@@ -39,4 +39,16 @@ const createDescription = (payload) =>
       .catch(reject);
   });
 
-export { getAllDescriptions, getDescriptionsByUid, createDescription };
+const deleteDescription = (id) =>
+  new Promise((resolve, reject) => {
+    fetch(`http://localhost:8000/descriptions/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
+export { getAllDescriptions, getDescriptionsByUid, createDescription, deleteDescription };

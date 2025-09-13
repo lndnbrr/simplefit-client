@@ -15,12 +15,16 @@ function WorkoutsByMG({ params }) {
     getMgWorkouts(user.uid, id).then(setWorkouts);
   }, [user.uid, id]);
 
+  const resetWorkouts = () => {
+    getMgWorkouts(user.uid, id).then(setWorkouts);
+  };
+
   return (
     <>
       <h3>This is the page where we see all Workouts by Muscle Group!</h3>
       <p>This is the id: {id}</p>
       {workouts.map((wo) => (
-        <WorkoutLog key={wo.id} workoutObj={wo} />
+        <WorkoutLog key={wo.id} workoutObj={wo} onUpdate={resetWorkouts} />
       ))}
     </>
   );
